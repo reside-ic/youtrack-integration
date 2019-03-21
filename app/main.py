@@ -23,6 +23,9 @@ if __name__ == "__main__":
 @app.route('/pull-request/', methods=['POST'])
 def assign():
     payload = request.get_json()
+    if payload["action"] not in ["assigned", "opened"]:
+        return '', 200
+
     issue_id = payload["pull_request"]["head"]["ref"]
     assignee = settings["users_dict"][payload["pull_request"]["assignee"]["login"]]
     url = payload["pull_request"]["url"]
