@@ -24,7 +24,8 @@ if __name__ == "__main__":
 def assign():
     payload = request.get_json()
     issue_id = payload["pull_request"]["head"]["ref"]
-    assignee = payload["pull_request"]["assignee"]
+    assignee = settings["users_dict"][payload["pull_request"]["assignee"]["login"]]
+    url = payload["pull_request"]["url"]
     yt = YouTrackHelper(settings["youtrack_instance_name"], settings["youtrack_token"])
-    yt.assign_ticket(issue_id, assignee)
+    yt.assign_ticket(issue_id, assignee, url)
     return '', 200

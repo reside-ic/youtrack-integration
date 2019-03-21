@@ -1,4 +1,7 @@
 {
   "youtrack_instance_name": "vimc",
-  "youtrack_token": "<PERM_TOKEN>"
+  "youtrack_token": "<PERM_TOKEN>",
+  "users_dict": {
+    "hillalex": "a.hill"
+  }
 }
