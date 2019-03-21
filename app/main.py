@@ -23,12 +23,15 @@ if __name__ == "__main__":
 @app.route('/pull-request/', methods=['POST'])
 def assign():
     payload = request.get_json()
-    if payload["action"] not in ["assigned", "opened"]:
+    pr = payload["pull_request"]
+    assignee = pr["assignee"]
+
+    if payload["action"] not in ["assigned", "opened"] or assignee is None:
         return '', 200
 
-    issue_id = payload["pull_request"]["head"]["ref"]
-    assignee = settings["users_dict"][payload["pull_request"]["assignee"]["login"]]
-    url = payload["pull_request"]["url"]
+    issue_id = pr["head"]["ref"]
+    assignee = settings["users_dict"][assignee["login"]]
+    url = pr["url"]
     yt = YouTrackHelper(settings["youtrack_instance_name"], settings["youtrack_token"])
     yt.assign_ticket(issue_id, assignee, url)
     return '', 200
