@@ -15,16 +15,14 @@ class YouTrackHelper:
         }
         url_fragment = "issue/{}/execute".format(issue_id)
         r = self.post(url_fragment, params)
-        print(r.text)
         return r.status_code == 200, r
 
     def set_ticket_state(self, issue_id, state):
         params = {
-            "command": "state {]".format(state)
+            "command": "state {}".format(state)
         }
         url_fragment = "issue/{}/execute".format(issue_id)
         r = self.post(url_fragment, params)
-        print(r.text)
         return r.status_code == 200, r
 
     def post(self, url_fragment, body):
@@ -34,7 +32,6 @@ class YouTrackHelper:
             "Content-type": "application/x-www-form-urlencoded"
         }
         url = self.base_url + url_fragment
-        print(url)
         response = requests.request("post", url, headers=headers, params=body)
         if response.status_code == 401:
             raise Exception("Failed to authorize against YouTrack")
