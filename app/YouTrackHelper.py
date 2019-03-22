@@ -8,18 +8,18 @@ class YouTrackHelper:
         self.token = token
         self.base_url = self.base_url.format(instance_name)
 
-    def assign_ticket(self, issue_id, assignee, comment):
-        params = {
-            "command": "for {}".format(assignee),
-            "comment": comment
-        }
-        url_fragment = "issue/{}/execute".format(issue_id)
-        r = self.post(url_fragment, params)
-        return r.status_code == 200, r
+    @staticmethod
+    def set_state(state):
+        return "state {}".format(state)
 
-    def set_ticket_state(self, issue_id, state):
+    @staticmethod
+    def assign(assignee):
+        return "for {}".format(assignee)
+
+    def update_ticket(self, issue_id, commands, comment):
         params = {
-            "command": "state {}".format(state)
+            "command": " ".join(commands),
+            "comment": comment
         }
         url_fragment = "issue/{}/execute".format(issue_id)
         r = self.post(url_fragment, params)

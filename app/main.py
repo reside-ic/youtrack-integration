@@ -28,17 +28,20 @@ def assign():
     if payload["action"] == "review_requested":
         assignee = users[pr["requested_reviewers"][0]["login"]]
         print(assignee)
-        yt.assign_ticket(issue_id, assignee, url)
-        yt.set_ticket_state(issue_id, "Submitted")
+        yt.update_ticket(issue_id,
+                         commands=[yt.set_state("Submitted"), yt.assign(assignee)],
+                         comment=url)
 
     if payload["action"] == "closed" and pr["merged"] is True:
-        yt.assign_ticket(issue_id, "Unassigned", None)
-        yt.set_ticket_state(issue_id, "Ready to deploy")
+        yt.update_ticket(issue_id,
+                         commands=[yt.set_state("Ready to deploy"), yt.assign("Unassigned")],
+                         comment=url)
 
     if payload["action"] == "submitted":
         review = payload["review"]
         if review["state"] != "approved":
-            yt.assign_ticket(issue_id, pr["user"]["login"], review["html_url"])
-            yt.set_ticket_state(issue_id, "Reopened")
+            yt.update_ticket(issue_id,
+                             commands=[yt.set_state("Reopened"), yt.assign(pr["user"]["login"])],
+                             comment=url)
 
     return '', 200
