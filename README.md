@@ -27,3 +27,8 @@ The config requires 3 things:
 1. a dictionary from GitHub logins to YouTrack usernames
 
 See the `sample.config.json` file.
+
+## Tests
+To run tests :
+1. `pip3 install -r requirements-dev.txt --user`
+1. `pytest`
