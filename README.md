@@ -15,7 +15,7 @@ Actions taken by the webhook:
 1. If the event payload `action` field is `closed` and `pull_request[merged]` is true:
     1. sets the ticket state to "Ready to deploy"
     1. unassigns the ticket
-1. If the event payload `action` field is `submitted` and `review[state]` is "approved":
+1. If the event payload `action` field is `submitted` and `review[state]` is not "approved":
     1. sets the ticket state to "Reopened"
     1. assigns the ticket back to the PR owner
     

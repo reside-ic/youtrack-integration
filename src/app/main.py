@@ -37,7 +37,7 @@ def assign():
     users = settings["users_dict"]
     payload = request.get_json()
     pr = payload["pull_request"]
-    url = pr["url"]
+    url = pr["html_url"]
 
     issue_id = get_issue_id(pr["head"]["ref"])
 
@@ -46,7 +46,6 @@ def assign():
 
     if payload["action"] == "review_requested":
         assignee = users[pr["requested_reviewers"][0]["login"]]
-        print(assignee)
         yt.update_ticket(issue_id,
                          commands=[yt.set_state("Submitted"), yt.assign(assignee)],
                          comment=url)
