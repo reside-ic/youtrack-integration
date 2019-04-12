@@ -30,7 +30,16 @@ The config requires 4 things:
 
 If a config value is provided in the format "VAULT:path:key" in will be resolved by looking up the secret from vault.
 
+## Deployment
+The app runs inside a docker container and is mapped to port 4567 on the host machine.
+To deploy:
+1. `pip3 intall -r requirements.txt`
+1. `run`
+
 ## Tests
 To run tests :
 1. `pip3 install -r requirements-dev.txt --user`
 1. `pytest`
+
+## Teamcity
+On TC the script `./teamcity.sh` runs which runs tests and builds the docker image

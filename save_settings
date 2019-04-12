@@ -13,6 +13,7 @@ def resolve_secret(value):
     if not m:
         raise Exception("Invalid vault accessor '{}'".format(value))
     path, key = m.groups()
+
     client = hvac.Client(url=os.environ['VAULT_ADDR'],
                          token=os.environ['VAULT_TOKEN'])
 

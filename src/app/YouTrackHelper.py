@@ -1,5 +1,8 @@
 import requests
+import re
 
+old_branch_pattern = re.compile(r"^i(\d+)($|[_-])")
+new_branch_pattern = re.compile(r"^(.+-\d+)($|[_-])")
 
 class YouTrackHelper:
     base_url = "https://{}.myjetbrains.com/youtrack/rest/"
@@ -36,3 +39,14 @@ class YouTrackHelper:
         if response.status_code == 401:
             raise Exception("Failed to authorize against YouTrack")
         return response
+
+    @staticmethod
+    def get_issue_id(branch_name):
+        old_match = old_branch_pattern.match(branch_name)
+        new_match = new_branch_pattern.match(branch_name)
+        if old_match:
+            return "VIMC-" + old_match.group(1)
+        elif new_match:
+            return new_match.group(1)
+        else:
+            return None

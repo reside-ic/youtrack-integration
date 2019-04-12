@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from flask import Flask, request
-import re
 import hmac
 import hashlib
 import json
@@ -9,8 +8,10 @@ from .YouTrackHelper import YouTrackHelper
 
 
 def load_settings():
-    with open("config.final.json", 'r') as f:
+    with open("config.json", 'r') as f:
         data = json.load(f)
+    with open("config.json", 'w') as f:
+        f.write("")
     return data
 
 
@@ -19,20 +20,6 @@ settings = load_settings()
 app = Flask(__name__)
 
 yt = YouTrackHelper(settings["youtrack_instance_name"], settings["youtrack_token"])
-
-old_branch_pattern = re.compile(r"^i(\d+)($|[_-])")
-new_branch_pattern = re.compile(r"^(.+-\d+)($|[_-])")
-
-
-def get_issue_id(branch_name):
-    old_match = old_branch_pattern.match(branch_name)
-    new_match = new_branch_pattern.match(branch_name)
-    if old_match:
-        return "VIMC-" + old_match.group(1)
-    elif new_match:
-        return new_match.group(1)
-    else:
-        return None
 
 
 @app.route('/pull-request/', methods=['POST'])
@@ -47,7 +34,7 @@ def assign():
     pr = payload["pull_request"]
     url = pr["html_url"]
 
-    issue_id = get_issue_id(pr["head"]["ref"])
+    issue_id = YouTrackHelper.get_issue_id(pr["head"]["ref"])
 
     if issue_id is None:
         return '', 200
