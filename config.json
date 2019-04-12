@@ -1,7 +1,9 @@
 {
   "youtrack_instance_name": "vimc",
-  "youtrack_token": "<PERM_TOKEN>",
+  "youtrack_token": "VAULT:secret/webhook/youtrack:token",
+  "github_secret": "VAULT:secret/webhook/github:secret",
   "users_dict": {
+    "MartinEden": "martin",
     "hillalex": "a.hill",
     "richfitz": "richfitz",
     "r-ash": "rob",

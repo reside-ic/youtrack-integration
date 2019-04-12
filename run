@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -ex
 
-docker build --tag webhook .
+python3 ./save_settings
+
+docker build \
+	--tag webhook .
+
 docker run --rm \
     -p 4567:80 \
     webhook

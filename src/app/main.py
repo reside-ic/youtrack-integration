@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 from flask import Flask, request
-import json
 import re
+import hmac
+import hashlib
+import json
 
 from .YouTrackHelper import YouTrackHelper
 
-app = Flask(__name__)
-
 
 def load_settings():
-    with open("config.json", 'r') as f:
+    with open("config.final.json", 'r') as f:
         data = json.load(f)
     return data
 
 
 settings = load_settings()
+
+app = Flask(__name__)
+
 yt = YouTrackHelper(settings["youtrack_instance_name"], settings["youtrack_token"])
 
 old_branch_pattern = re.compile(r"^i(\d+)($|[_-])")
@@ -34,8 +37,13 @@ def get_issue_id(branch_name):
 
 @app.route('/pull-request/', methods=['POST'])
 def assign():
-    users = settings["users_dict"]
+
     payload = request.get_json()
+    hash_signature = request.headers["X-Hub-Signature"]
+
+    if not signature_matches(request.data, hash_signature):
+        return '', 401
+
     pr = payload["pull_request"]
     url = pr["html_url"]
 
@@ -45,6 +53,7 @@ def assign():
         return '', 200
 
     if payload["action"] == "review_requested":
+        users = settings["users_dict"]
         assignee = users[pr["requested_reviewers"][0]["login"]]
         yt.update_ticket(issue_id,
                          commands=[yt.set_state("Submitted"), yt.assign(assignee)],
@@ -63,3 +72,9 @@ def assign():
                              comment=url)
 
     return '', 200
+
+
+def signature_matches(payload, hash_signature):
+    secret = bytes(settings["github_secret"], 'latin1')
+    signature = 'sha1=' + hmac.new(secret, payload, hashlib.sha1).hexdigest()
+    return hmac.compare_digest(signature, hash_signature)
