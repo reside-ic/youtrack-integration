@@ -1,7 +1,7 @@
 {
   "youtrack_instance_name": "vimc",
-  "youtrack_token": "VAULT:secret/webhook/youtrack:token",
-  "github_secret": "VAULT:secret/webhook/github:secret",
+  "youtrack_token": "VAULT:secret/youtrack-integration/youtrack:token",
+  "github_secret": "VAULT:secret/youtrack-integration/github:secret",
   "users_dict": {
     "MartinEden": "martin",
     "hillalex": "a.hill",

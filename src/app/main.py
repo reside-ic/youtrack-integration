@@ -11,7 +11,7 @@ def load_settings():
     with open("config.json", 'r') as f:
         data = json.load(f)
     with open("config.json", 'w') as f:
-        f.write("")
+        f.write("")  # remove sensitive config from disk after reading it into memory
     return data
 
 

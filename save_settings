@@ -42,9 +42,7 @@ def save_settings():
     with open("config.json", 'r') as f:
         data = json.load(f)
         resolve_secrets(data)
-    with open("config.final.json", 'a'):  # Create file if does not exist
-        pass
-    with open("config.final.json", 'w') as f:
+    with open("config.final.json", 'w+') as f:
         f.write(json.dumps(data))
 
 
