@@ -21,14 +21,25 @@ Actions taken by the webhook:
     
     
 ## Configuration
-The config requires 3 things:
+See the `config.json` file.
+The config requires 4 things:
 1. the YouTrack instance name
 1. a permanent [YouTrack API access token](https://www.jetbrains.com/help/youtrack/standalone/Manage-Permanent-Token.html)
+1. a secret token used by GitHub to secure the webhook: see https://developer.github.com/webhooks/securing/
 1. a dictionary from GitHub logins to YouTrack usernames
 
-See the `sample.config.json` file.
+If a config value is provided in the format "VAULT:path:key" in will be resolved by looking up the secret from vault.
+
+## Deployment
+The app runs inside a docker container and is mapped to port 4567 on the host machine.
+To deploy:
+1. `pip3 install -r requirements.txt`
+1. `run --vault-auth` to first resolve secrets before running the app
 
 ## Tests
 To run tests :
 1. `pip3 install -r requirements-dev.txt --user`
 1. `pytest`
+
+## Teamcity
+On TC the script `./teamcity.sh` runs which runs tests and builds the docker image

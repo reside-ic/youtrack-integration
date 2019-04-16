@@ -1,4 +1,4 @@
 .pytest_cache
 **/__pycache__/**
-config.json
+config.final.json
 .idea

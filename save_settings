@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+import hvac
+import json
+import re
+import os
+
+
+def resolve_secret(value):
+    re_vault = re.compile("^VAULT:([^:]+):([^:]+)$")
+    if not value.startswith("VAULT:"):
+        return False, value
+    m = re_vault.match(value)
+    if not m:
+        raise Exception("Invalid vault accessor '{}'".format(value))
+    path, key = m.groups()
+
+    client = hvac.Client(url=os.environ['VAULT_ADDR'],
+                         token=os.environ['VAULT_TOKEN'])
+
+    if not client.is_authenticated():
+        raise Exception("You must be authenticated with vault.")
+
+    data = client.read(path)
+    if not data:
+        raise Exception("Did not find secret at '{}'".format(path))
+
+    if key not in data["data"]:
+        raise Exception("Did not find key '{}' at secret path '{}'".format(
+            key, path))
+    return True, data["data"][key]
+
+
+def resolve_secrets(dict):
+    for k, v in dict.items():
+        if type(v) == str:
+            updated, v = resolve_secret(v)
+            if updated:
+                dict[k] = v
+
+
+def save_settings():
+    with open("config.json", 'r') as f:
+        data = json.load(f)
+        resolve_secrets(data)
+    with open("config.final.json", 'w+') as f:
+        f.write(json.dumps(data))
+
+
+save_settings()

@@ -1,7 +1,21 @@
 #!/usr/bin/env bash
 set -ex
 
-docker build --tag webhook .
-docker run --rm \
+here=$(dirname $0)
+git_id=$(git rev-parse --short=7 HEAD)
+
+registry=docker.montagu.dide.ic.ac.uk:5000
+name=youtrack-integration-webhook
+
+if [ "$1" = "--use-vault" ]; then
+    . $here/vault_auth.sh
+fi
+
+python3 ./save_settings
+
+docker run -d \
+    --restart always \
+    -v $PWD/config.final.json:/app/config.json \
     -p 4567:80 \
-    webhook
+    --name youtrack-integration \
+    $registry/$name:$git_id
