@@ -50,16 +50,16 @@ def assign():
     if payload["action"] == "submitted":
         review = payload["review"]
         if review["state"] != "approved":
-            review_url = review["html_url"]
-            return reopen(issue_id, pr, review_url)
+            return reopen(issue_id, pr, review)
 
     return '', 200
 
 
-def reopen(issue_id, pr, review_url):
-    users = settings["users_dict"]
-    assignee = users[pr["user"]["login"]]
-    if pr["user"]["login"] != pr["requested_reviewers"][0]["login"]:  # ignore author reviewing their own code
+def reopen(issue_id, pr, review):
+    if pr["user"]["login"] != review["user"]["login"]:  # ignore author reviewing their own code
+        users = settings["users_dict"]
+        assignee = users[pr["user"]["login"]]
+        review_url = review["html_url"]
         print("Reopening ticket {} and assigning user {}".format(issue_id, assignee))
         success, response = yt.update_ticket(issue_id,
                                              commands=[yt.set_state("Reopened"), yt.assign(assignee)],
