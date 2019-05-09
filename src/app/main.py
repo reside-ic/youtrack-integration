@@ -41,31 +41,53 @@ def assign():
         print("No YouTrack issue associated with branch {}".format(branch_name))
         return '', 200
 
-    users = settings["users_dict"]
-
     if payload["action"] == "review_requested":
-        assignee = users[pr["requested_reviewers"][0]["login"]]
-        print("Submitting ticket {} and assigning user {}".format(issue_id, assignee))
-        yt.update_ticket(issue_id,
-                         commands=[yt.set_state("Submitted"), yt.assign(assignee)],
-                         comment=url)
+        return submit(issue_id, pr, url)
 
     if payload["action"] == "closed" and pr["merged"] is True:
-        print(("Closing ticket {} and unassigning".format(issue_id)))
-        yt.update_ticket(issue_id,
-                         commands=[yt.set_state("Ready to deploy"), yt.assign("Unassigned")],
-                         comment=url)
+        return close(issue_id, url)
 
     if payload["action"] == "submitted":
         review = payload["review"]
-        assignee = users[pr["user"]["login"]]
-        url = review["html_url"]
         if review["state"] != "approved":
-            print("Reopening ticket {} and assigning user {}".format(issue_id, assignee))
-            yt.update_ticket(issue_id,
-                             commands=[yt.set_state("Reopened"), yt.assign(assignee)],
-                             comment=url)
+            review_url = review["html_url"]
+            return reopen(issue_id, pr, review_url)
 
+    return '', 200
+
+
+def reopen(issue_id, pr, review_url):
+    users = settings["users_dict"]
+    assignee = users[pr["user"]["login"]]
+    if pr["user"]["login"] != pr["requested_reviewers"][0]["login"]:  # ignore author reviewing their own code
+        print("Reopening ticket {} and assigning user {}".format(issue_id, assignee))
+        success, response = yt.update_ticket(issue_id,
+                                             commands=[yt.set_state("Reopened"), yt.assign(assignee)],
+                                             comment=review_url)
+        if not success:
+            return response.text, response.status_code
+    return '', 200
+
+
+def close(issue_id, url):
+    print(("Closing ticket {} and unassigning".format(issue_id)))
+    success, response = yt.update_ticket(issue_id,
+                                         commands=[yt.set_state("Ready to deploy"), yt.assign("Unassigned")],
+                                         comment=url)
+    if not success:
+        return response.text, response.status_code
+    return '', 200
+
+
+def submit(issue_id, pr, url):
+    users = settings["users_dict"]
+    assignee = users[pr["requested_reviewers"][0]["login"]]
+    print("Submitting ticket {} and assigning user {}".format(issue_id, assignee))
+    success, response = yt.update_ticket(issue_id,
+                                         commands=[yt.set_state("Submitted"), yt.assign(assignee)],
+                                         comment=url)
+    if not success:
+        return response.text, response.status_code
     return '', 200
 
 
