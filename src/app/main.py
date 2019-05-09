@@ -38,20 +38,20 @@ def assign():
     issue_id = YouTrackHelper.get_issue_id(branch_name)
 
     if issue_id is None:
-        app.logger.warning("No YouTrack issue associated with branch {}".format(branch_name))
+        print("No YouTrack issue associated with branch {}".format(branch_name))
         return '', 200
 
     users = settings["users_dict"]
 
     if payload["action"] == "review_requested":
         assignee = users[pr["requested_reviewers"][0]["login"]]
-        app.logger.info("Submitting ticket {} and assigning user {}".format(issue_id, assignee))
+        print("Submitting ticket {} and assigning user {}".format(issue_id, assignee))
         yt.update_ticket(issue_id,
                          commands=[yt.set_state("Submitted"), yt.assign(assignee)],
                          comment=url)
 
     if payload["action"] == "closed" and pr["merged"] is True:
-        app.logger.info("Closing ticket {} and unassigning".format(issue_id))
+        print(("Closing ticket {} and unassigning".format(issue_id)))
         yt.update_ticket(issue_id,
                          commands=[yt.set_state("Ready to deploy"), yt.assign("Unassigned")],
                          comment=url)
@@ -61,7 +61,7 @@ def assign():
         assignee = users[pr["user"]["login"]]
         url = review["html_url"]
         if review["state"] != "approved":
-            app.logger.info("Reopening ticket {} and assigning user {}".format(issue_id, assignee))
+            print("Reopening ticket {} and assigning user {}".format(issue_id, assignee))
             yt.update_ticket(issue_id,
                              commands=[yt.set_state("Reopened"), yt.assign(assignee)],
                              comment=url)
