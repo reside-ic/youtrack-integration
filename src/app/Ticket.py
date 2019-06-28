@@ -1,7 +1,9 @@
 class Ticket:
-    def __init__(self, payload, api):
+    def __init__(self, payload, api, users_dict):
         self.payload = payload
+        self.action = payload["action"]
         self.api = api
+        self.users_dict = users_dict
         self.pr = payload["pull_request"]
         self.url = self.pr["html_url"]
         self.branch_name = self.pr["head"]["ref"]
@@ -14,16 +16,27 @@ class Ticket:
             return False
         return True
 
-    def update(self, users):
-        review = self.payload["review"]
-        if review["state"] == "approved":
-            return '', 200
-        author = self.pr["user"]["login"]
-        if author == review["user"]["login"]:
-            # ignore author reviewing their own code
-            return '', 200
+    def update(self):
+        if self.action == "review_requested":
+            return self.__submit()
 
-        assignee = users[author]
+        if self.action == "closed":
+            return self.__close()
+
+        if self.action == "submitted":
+            review = self.payload["review"]
+            if review["state"] == "approved":
+                return '', 200
+            author = self.pr["user"]["login"]
+            if author == review["user"]["login"]:
+                # ignore author reviewing their own code
+                return '', 200
+            return self.__reopen(author, review)
+
+        return '', 200
+
+    def __reopen(self, author, review):
+        assignee = self.users_dict[author]
         review_url = review["html_url"]
         print("Reopening ticket {} and assigning user {}".format(self.issue_id,
                                                                  assignee))
@@ -36,7 +49,7 @@ class Ticket:
             return response.text, response.status_code
         return '', 200
 
-    def close(self):
+    def __close(self):
         if self.pr["merged"] is False:
             return '', 200
         print(("Closing ticket {} and unassigning".format(self.issue_id)))
@@ -48,9 +61,9 @@ class Ticket:
             return response.text, response.status_code
         return '', 200
 
-    def submit(self, users):
+    def __submit(self):
         reviewer = self.pr["requested_reviewers"][0]["login"]
-        assignee = users[reviewer]
+        assignee = self.users_dict[reviewer]
         print(
             "Submitting ticket {} and assigning user {}".format(self.issue_id,
                                                                 assignee))

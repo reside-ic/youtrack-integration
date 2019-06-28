@@ -34,21 +34,12 @@ def assign():
     if not signature_matches(request.data, hash_signature):
         return '', 401
 
-    ticket = Ticket(payload, api)
+    ticket = Ticket(payload, api, settings["users_dict"])
 
     if not ticket.exists():
         return '', 200
 
-    if payload["action"] == "review_requested":
-        return ticket.submit(settings["users_dict"])
-
-    if payload["action"] == "closed":
-        return ticket.close()
-
-    if payload["action"] == "submitted":
-        return ticket.update(settings["users_dict"])
-
-    return '', 200
+    return ticket.update()
 
 
 def signature_matches(payload, hash_signature):
