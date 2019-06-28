@@ -14,7 +14,6 @@ fi
 python3 ./save_settings
 
 docker run -d \
-    --restart always \
     -v $PWD/config.final.json:/app/config.json \
     -p 4567:80 \
     --name youtrack-integration \
