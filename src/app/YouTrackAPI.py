@@ -20,11 +20,12 @@ class YouTrackAPI:
     def assign(assignee):
         return "for {}".format(assignee)
 
-    def update_ticket(self, issue_id, commands, comment):
+    def update_ticket(self, issue_id, commands, comment=None):
         params = {
-            "command": " ".join(commands),
-            "comment": comment
+            "command": " ".join(commands)
         }
+        if comment is not None:
+            params["comment"] = comment
         url_fragment = "issue/{}/execute".format(issue_id)
         r = self.post(url_fragment, params)
         return r.status_code == 200, r
