@@ -4,7 +4,8 @@ import re
 old_branch_pattern = re.compile(r"^i(\d+)($|[_-])")
 new_branch_pattern = re.compile(r"^(.+-\d+)($|[_-])")
 
-class YouTrackHelper:
+
+class YouTrackAPI:
     base_url = "https://{}.myjetbrains.com/youtrack/rest/"
 
     def __init__(self, instance_name, token):
