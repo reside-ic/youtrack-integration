@@ -43,3 +43,15 @@ To run tests :
 
 ## Teamcity
 On TC the script `./teamcity.sh` runs which runs tests and builds the docker image
+
+## Adding the webhook
+
+The webhook can be added to a whole organisation or to a repository.  For the `mrc-ide` org it will be most appropriate to only activate individual repositories.
+
+1. Go to `https://github.com/:org/:repo/settings/hooks` or `https://github.com/organizations/:org/settings/hooks`
+2. Click `Add Webhook`
+3. Payload URL is https://montagu.vaccineimpact.org/pull-request/
+4. Content type is `application/json`
+5. Secret from the vault as `vault read secret/youtrack-integration/github`
+6. Select "Let me select individual events" and select "Pull requests" and "Pull request reviews"
+7. Click the big green "Add webhook" button
