@@ -1,5 +1,5 @@
 {
-  "youtrack_instance_name": "vimc",
+  "youtrack_instance_name": "mrc-ide",
   "youtrack_token": "VAULT:secret/youtrack-integration/youtrack:token",
   "github_secret": "VAULT:secret/youtrack-integration/github:secret",
   "users_dict": {
