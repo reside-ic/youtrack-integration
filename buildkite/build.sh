@@ -5,7 +5,7 @@ HERE=$(dirname $0)
 
 NAME=youtrack-integration-webhook
 COMMIT_TAG=$ORG/$NAME:$GIT_SHA
-BRANCH_TAG=$ORG/$$NAME:$GIT_BRANCH
+BRANCH_TAG=$ORG/$NAME:$GIT_BRANCH
 
 docker build -t $COMMIT_TAG -t $BRANCH_TAG .
 docker push $COMMIT_TAG
