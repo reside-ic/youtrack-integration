@@ -41,8 +41,8 @@ To run tests :
 1. `pip3 install -r requirements-dev.txt --user`
 1. `pytest`
 
-## Teamcity
-On TC the script `./teamcity.sh` runs which runs tests and builds the docker image
+## CI
+On Buildkite the script `./buildkite/build.sh` runs which runs tests and builds the docker image
 
 ## Adding the webhook
 

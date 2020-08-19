@@ -1,0 +1,3 @@
+steps:
+    - label: ":shipit: Test, build and push image"
+      command: buildkite/build.sh
