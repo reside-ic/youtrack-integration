@@ -1,3 +1,8 @@
 steps:
-    - label: ":shipit: Test, build and push image"
+    - label: ":mag: Run tests"
+      command: buildkite/test.sh
+
+    -wait
+
+    - label: ":shipit: Build and push image"
       command: buildkite/build.sh
