@@ -4,7 +4,7 @@ set -ex
 here=$(dirname $0)
 git_id=$(git rev-parse --short=7 HEAD)
 
-registry=docker.montagu.dide.ic.ac.uk:5000
+org=vimc
 name=youtrack-integration-webhook
 
 if [ "$1" = "--use-vault" ]; then
@@ -17,4 +17,4 @@ docker run -d \
     -v $PWD/config.final.json:/app/config.json \
     -p 4567:80 \
     --name youtrack-integration \
-    $registry/$name:$git_id
+    $org/$name:$git_id

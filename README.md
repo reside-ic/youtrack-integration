@@ -1,4 +1,6 @@
 ## YouTrack - GitHub Integration
+[![Build status](https://badge.buildkite.com/9079a4a8af7ed89debf5b094a76b2931cb12df49c136caef92.svg?branch=master)](https://buildkite.com/mrc-ide/youtrack-webhook)
+
 This Flask app exposes a single endpoint `/pull-request/` to be used as a GitHub webhook for 
 [pull request events](https://developer.github.com/v3/activity/events/types/#pullrequestevent) and 
 [pull request review events](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent)
@@ -41,8 +43,10 @@ To run tests :
 1. `pip3 install -r requirements-dev.txt --user`
 1. `pytest`
 
-## Teamcity
-On TC the script `./teamcity.sh` runs which runs tests and builds the docker image
+## CI
+On Buildkite:
+1. `./buildkite/test.sh` runs tests in a docker container
+1. `./buildkite/build.sh` builds and pushes the docker image
 
 ## Adding the webhook
 
