@@ -3,12 +3,11 @@
   "youtrack_token": "VAULT:secret/youtrack-integration/youtrack:token",
   "github_secret": "VAULT:secret/youtrack-integration/github:secret",
   "users_dict": {
-    "MartinEden": "martin",
     "hillalex": "a.hill",
     "richfitz": "richfitz",
     "r-ash": "rob",
-    "JamesThompson1729": "james.thompson",
     "weshinsley": "w.hinsley",
-    "EmmaLRussell": "e.russell"
+    "EmmaLRussell": "e.russell",
+    "Nicolas-Dolan": "nicolas.dolan08"
   }
 }
