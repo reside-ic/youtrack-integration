@@ -33,8 +33,9 @@ The config requires 4 things:
 If a config value is provided in the format "VAULT:path:key" in will be resolved by looking up the secret from vault.
 
 ## Deployment
-The app runs inside a docker container and is mapped to port 4567 on the host machine.
+The app runs inside a docker container and is mapped to port 4567 on the host machine. We currently have this deployed on support.montagu.dide.ic.ac.uk (see [montagu-machine](https://github.com/vimc/montagu-machine/blob/master/docs/Support.md)).
 To deploy:
+1. if already running, remove the container: `docker rm -f youtrack-integration`
 1. `pip3 install -r requirements.txt`
 1. `./run --use-vault` to first resolve secrets before running the app
 
