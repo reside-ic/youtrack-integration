@@ -32,9 +32,11 @@ class Ticket:
             review = self.payload["review"]
             if review["state"] == "approved":
                 url = self.pr["url"] + "/reviews"
+                reviewer = self.payload["review"]["user"]["login"]
                 payload = self.gh_api.get(url)
                 remaining_reviews = \
-                    [p for p in payload if p["state"] != "APPROVED"]
+                    [p for p in payload if p["state"] != "APPROVED"
+                     and p["user"]["login"] != reviewer]
                 if len(remaining_reviews) > 0:
                     next_reviewer = remaining_reviews[0]["user"]["login"]
                     return self.__submit(next_reviewer)
@@ -52,11 +54,12 @@ class Ticket:
         review_url = review["html_url"]
         print("Reopening ticket {} and assigning user {}".format(self.issue_id,
                                                                  assignee))
-        commands = [self.yt_api.set_state("Reopened"), self.yt_api.assign(assignee)]
+        commands = [self.yt_api.set_state("Reopened"),
+                    self.yt_api.assign(assignee)]
         print(review_url, self.issue_id, commands)
         success, response = self.yt_api.update_ticket(self.issue_id,
-                                                   commands=commands,
-                                                   comment=review_url)
+                                                      commands=commands,
+                                                      comment=review_url)
         if not success:
             return response.text, response.status_code
         return '', 200
@@ -68,7 +71,7 @@ class Ticket:
         commands = [self.yt_api.set_state("Ready to deploy"),
                     self.yt_api.assign("Unassigned")]
         success, response = self.yt_api.update_ticket(self.issue_id,
-                                                   commands=commands)
+                                                      commands=commands)
         if not success:
             return response.text, response.status_code
         return '', 200
@@ -78,10 +81,11 @@ class Ticket:
         print(
             "Submitting ticket {} and assigning user {}".format(self.issue_id,
                                                                 assignee))
-        commands = [self.yt_api.set_state("Submitted"), self.yt_api.assign(assignee)]
+        commands = [self.yt_api.set_state("Submitted"),
+                    self.yt_api.assign(assignee)]
         success, response = self.yt_api.update_ticket(self.issue_id,
-                                                   commands=commands,
-                                                   comment=self.url)
+                                                      commands=commands,
+                                                      comment=self.url)
         if not success:
             return response.text, response.status_code
         return '', 200

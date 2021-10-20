@@ -164,10 +164,19 @@ reviews_payload = json.loads("""[
   {
     "id": 81,
     "user": {
+      "login": "Octocat"
+    },
+    "state": "COMMENTED",
+    "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-81",
+    "pull_request_url": "https://api.github.com/repos/octocat/Hello-World/pulls/2"
+  },
+  {
+    "id": 82,
+    "user": {
       "login": "Codertocat"
     },
     "state": "PENDING",
-    "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-80",
+    "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-82",
     "pull_request_url": "https://api.github.com/repos/octocat/Hello-World/pulls/2"
   }
 ]""")
