@@ -4,6 +4,7 @@ import hmac
 import hashlib
 import json
 
+from .GitHubAPI import GitHubAPI
 from .YouTrackAPI import YouTrackAPI
 from .Ticket import Ticket
 
@@ -25,6 +26,8 @@ api = YouTrackAPI(settings["youtrack_instance_name"],
                     settings["youtrack_token"])
 
 
+gh_api = GitHubAPI()
+
 @app.route('/pull-request/', methods=['POST'])
 def assign():
 
@@ -34,7 +37,7 @@ def assign():
     if not signature_matches(request.data, hash_signature):
         return '', 401
 
-    ticket = Ticket(payload, api, settings["users_dict"])
+    ticket = Ticket(payload, api, gh_api, settings["users_dict"])
 
     if not ticket.exists():
         return '', 200
