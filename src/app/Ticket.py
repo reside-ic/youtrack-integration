@@ -1,4 +1,3 @@
-import requests
 
 
 class Ticket:
@@ -36,7 +35,9 @@ class Ticket:
                 payload = self.gh_api.get(url)
                 remaining_reviews = \
                     [p for p in payload if p["state"] != "APPROVED"
+                     and not has_approved(payload, p["user"]["login"])
                      and p["user"]["login"] != reviewer]
+
                 if len(remaining_reviews) > 0:
                     next_reviewer = remaining_reviews[0]["user"]["login"]
                     return self.__submit(next_reviewer)
@@ -89,3 +90,8 @@ class Ticket:
         if not success:
             return response.text, response.status_code
         return '', 200
+
+
+def has_approved(payload, username):
+    return len([p for p in payload if
+     p["state"] == "APPROVED" and p["user"]["login"] == username]) > 0
