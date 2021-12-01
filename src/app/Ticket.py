@@ -29,6 +29,7 @@ class Ticket:
 
         if self.action == "submitted":
             review = self.payload["review"]
+            author = self.pr["user"]["login"]
             if review["state"] == "approved":
                 url = self.pr["url"] + "/reviews"
                 reviewer = self.payload["review"]["user"]["login"]
@@ -36,7 +37,8 @@ class Ticket:
                 remaining_reviews = \
                     [p for p in payload if p["state"] != "APPROVED"
                      and not has_approved(payload, p["user"]["login"])
-                     and p["user"]["login"] != reviewer]
+                     and p["user"]["login"] != reviewer
+                     and p["user"]["login"] != author]
 
                 if len(remaining_reviews) > 0:
                     next_reviewer = remaining_reviews[0]["user"]["login"]

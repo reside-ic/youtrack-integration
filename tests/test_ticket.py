@@ -178,10 +178,20 @@ reviews_payload = json.loads("""[
     "state": "PENDING",
     "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-82",
     "pull_request_url": "https://api.github.com/repos/octocat/Hello-World/pulls/2"
+  },
+    {
+    "id": 83,
+    "user": {
+      "login": "Anothercat"
+    },
+    "state": "PENDING",
+    "html_url": "https://github.com/octocat/Hello-World/pull/12#pullrequestreview-83",
+    "pull_request_url": "https://api.github.com/repos/octocat/Hello-World/pulls/2"
   }
 ]""")
 
 mock_user_dict = {
+    "Anothercat": "ac",
     "Codertocat": "cc",
     "Octocat": "oc"
 }
@@ -221,7 +231,7 @@ def test_update_assigns_to_next_reviewer_on_approval():
     result = sut.update()
     mock_api.update_ticket.assert_called_with("RESIDE-11",
                                               commands=['state Submitted',
-                                                        'for cc'],
+                                                        'for ac'],
                                               comment="https://github.com/Codertocat/Hello-World/pull/2")
     assert result == ('', 200)
 
