@@ -3,15 +3,16 @@
   "youtrack_token": "VAULT:secret/youtrack-integration/youtrack:token",
   "github_secret": "VAULT:secret/youtrack-integration/github:secret",
   "users_dict": {
-    "a.thapar": "absternator",
-    "d.mears": "david-mears-2",
+    "absternator": "a.thapar",
+    "david-mears-2": "d.mears",
     "richfitz": "richfitz",
     "r-ash": "rob",
     "weshinsley": "w.hinsley",
     "EmmaLRussell": "e.russell",
     "LekanAnni": "y.anifowoshe",
-    "mantra": "M-Kusumgar",
+    "M-Kusumgar": "mantra",
     "muppi1993": "clara.gronemeyer20",
-    "Paul_Lietar": "plietar",
+    "plietar": "Paul_Lietar",
+    "pratikunterwegs": "pratikgupte",
   }
 }
