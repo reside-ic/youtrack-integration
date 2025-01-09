@@ -1,0 +1,22 @@
+# This performs a very basic sanity check on the included config.json file.
+# It must be valid JSON, and all keys of the users_dict must be valid GitHub usernames.
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  check-config:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          jq -r '.users_dict | keys | .[]' config.json | while read user
+          do
+            echo "Checking $user"
+            gh api --silent /users/$user
+          done
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+

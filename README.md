@@ -20,8 +20,8 @@ Actions taken by the webhook:
 1. If the event payload `action` field is `submitted` and `review[state]` is not "approved":
     1. sets the ticket state to "Reopened"
     1. assigns the ticket back to the PR owner
-    
-    
+
+
 ## Configuration
 See the `config.json` file.
 The config requires 4 things:
